@@ -78,49 +78,45 @@ public class CharacterController : MonoBehaviour
         //TODO: add camera direction into calculation
         return moveInput.normalized;
     }
-    void Move(Vector3 moveInput)
+    
+    //TODO: Refactor this to use the chain of responsibility pattern (too mitigate all the if statements).
+    void Move(Vector3 moveInputNormalized)
     {
-        // Calculate leg force based on the defined direction and leg force magnitude
-        var calculatedLegForce = movementDirectionForce * legForce;
-        //TODO: Refactor this to use the chain of responsibility pattern (too mitigate all the if statements).
         if (Time.time >= _nextLegMoveTime) // Check if cooldown has elapsed
         {
-            if (moveInput.y > 0) // Forward movement
+            if (moveInputNormalized.y != 0) // Forward or backward movement
             {
-                if (_wasLastLegRight)
-                {
-                    rightFoot.AddRelativeForce(calculatedLegForce, ForceMode.Impulse);
-                }
-                else
-                {
-                    leftFoot.AddRelativeForce(calculatedLegForce, ForceMode.Impulse);
-                }
-                _wasLastLegRight = !_wasLastLegRight; // Toggle the leg
-                _nextLegMoveTime = Time.time + legCooldownTime; // Reset cooldown
-            }
-            else if (moveInput.y < 0) // Backward movement
-            {
-                var backwardLegForce = -movementDirectionForce * this.legForce; // Opposite direction
-                if (_wasLastLegRight)
-                {
-                    rightFoot.AddRelativeForce(backwardLegForce, ForceMode.Impulse);
-                }
-                else
-                {
-                    leftFoot.AddRelativeForce(backwardLegForce, ForceMode.Impulse);
-                }
-                _wasLastLegRight = !_wasLastLegRight; // Toggle the leg
-                _nextLegMoveTime = Time.time + legCooldownTime; // Reset cooldown
+                int directionMultiplier = moveInputNormalized.y > 0 ? 1 : -1; // Determine direction
+                ApplyLegForce(directionMultiplier);
             }
         }
-        if (moveInput.x < 0) // Rotate left
+
+        if (moveInputNormalized.x == 0)
+            return;
+        
+        // Rotate the body
+        Vector3 rotation;
+        if (moveInputNormalized.x > 0)
+            rotation = bodyTorque;
+        else
+            rotation = -bodyTorque;
+        body.transform.eulerAngles += rotation;
+    }
+    void ApplyLegForce(int directionMultiplier)
+    {
+        var calculatedLegForce = movementDirectionForce * (legForce * directionMultiplier);
+    
+        if (_wasLastLegRight)
         {
-            body.transform.eulerAngles -= bodyTorque;
+            rightFoot.AddRelativeForce(calculatedLegForce, ForceMode.Impulse);
         }
-        else if (moveInput.x > 0) // Rotate right
+        else
         {
-            body.transform.eulerAngles += bodyTorque;
+            leftFoot.AddRelativeForce(calculatedLegForce, ForceMode.Impulse);
         }
+    
+        _wasLastLegRight = !_wasLastLegRight; // Toggle the leg
+        _nextLegMoveTime = Time.time + legCooldownTime; // Reset cooldown
     }
     void Jump(bool isJumpPressed)
     {

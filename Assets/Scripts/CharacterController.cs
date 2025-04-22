@@ -7,11 +7,13 @@ public class CharacterController : MonoBehaviour
     [SerializeField] InputReader input;
     //---------------------------------
     [Header("Head Physics")]
-    [SerializeField] GameObject head; // Reference to the Head GameObject
+    [SerializeField] ConstantForce headConstantForce;
     [Header("Foot Physics")]
     [SerializeField] float legForce;
     [SerializeField] float legCooldownTime = 0.2f; // Cooldown time between leg movements
     [SerializeField] Rigidbody rightFoot, leftFoot;
+    [SerializeField] ConstantForce rightFootConstantForce, leftFootConstantForce;
+    
     [Header("Arm Physics")]
     [SerializeField] float armAttackForce;
     [SerializeField] Rigidbody rightArm, leftArm;
@@ -21,10 +23,9 @@ public class CharacterController : MonoBehaviour
     [SerializeField] Vector3 movementDirectionForce;
     [SerializeField] Rigidbody body;
     //---------------------------------
-    ConstantForce _headConstantForce;
     
-    Vector3 _initialHeadForce;
     Vector3 _movementInput;
+    Vector3 _initialHeadForce, _initialLeftFootForce, _initialRightFootForce ;
 
     float _nextLegMoveTime;
         
@@ -34,8 +35,9 @@ public class CharacterController : MonoBehaviour
 
     void Awake()
     {
-        _headConstantForce = head.GetComponent<ConstantForce>();
-        _initialHeadForce = _headConstantForce.force; // Store the initial force
+        _initialHeadForce = headConstantForce.force; // Store the initial force
+        _initialLeftFootForce = leftFootConstantForce.force; // Store the initial force
+        _initialRightFootForce = rightFootConstantForce.force; // Store the initial force
     }
     void Start()
     {
@@ -122,15 +124,16 @@ public class CharacterController : MonoBehaviour
     {
         if (isJumpPressed)
         {
-            // On Jump Pressed: set Y force to 0
-            Vector3 force = _headConstantForce.force;
-            force.y = 0;
-            _headConstantForce.force = force;
+            headConstantForce.force = Vector3.zero;
+            leftFootConstantForce.force = Vector3.zero;
+            rightFootConstantForce.force = Vector3.zero;
         }
         else
         {
             // On Jump Released: Restore initial force
-            _headConstantForce.force = _initialHeadForce; // Restore the initial force
+            headConstantForce.force = _initialHeadForce; // Restore the initial force
+            leftFootConstantForce.force = _initialLeftFootForce; // Restore the initial force
+            rightFootConstantForce.force = _initialRightFootForce; // Restore the initial force
         }
     }
     void RightArmAttack()

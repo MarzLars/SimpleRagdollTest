@@ -17,16 +17,24 @@ namespace Input
     {
         #region Player Action Events
         public event UnityAction<Vector2> MoveEvent = delegate { };
+        
         public event UnityAction<bool> JumpEvent = delegate { };
         public event UnityAction<bool> LeftArmAttackEvent = delegate { };
         public event UnityAction<bool> RightArmAttackEvent = delegate { };
 
         #endregion
+        #region Editor Action Test Events
+        public event UnityAction<Vector2> LookEvent = delegate { };
+        public event UnityAction<bool> InteractEvent = delegate { };
+        
+        #endregion
         
         InputSystem_Actions _inputActions;
         
         public Vector3 moveInput => _inputActions.Player.Move.ReadValue<Vector2>();
+        public Vector3 lookInput => _inputActions.Player.Look.ReadValue<Vector2>();
         public bool jump => _inputActions.Player.Jump.IsPressed();
+        public bool interact => _inputActions.Player.Interact.IsPressed();
         public bool leftArmAttack => _inputActions.Player.LeftArmAttack.IsPressed();
         public bool rightArmAttack => _inputActions.Player.RightArmAttack.IsPressed();
         
@@ -56,6 +64,10 @@ namespace Input
         {
             MoveEvent.Invoke(context.ReadValue<Vector2>());
         }
+        public void OnLook(InputAction.CallbackContext context)
+        {
+            LookEvent.Invoke(context.ReadValue<Vector2>());
+        }
         public void OnJump(InputAction.CallbackContext context)
         {
             JumpEvent?.Invoke(context.action.WasPressedThisFrame());
@@ -68,21 +80,18 @@ namespace Input
         {
             RightArmAttackEvent?.Invoke(context.action.WasPressedThisFrame());
         }
+        public void OnInteract(InputAction.CallbackContext context)
+        {
+            InteractEvent?.Invoke(context.action.WasPressedThisFrame());
+        }
         //********************************************
 
         //*************NOT IMPLEMENTED METHODS*************
-        public void OnLook(InputAction.CallbackContext context)
-        {
-            //noop
-        }
         public void OnAttack(InputAction.CallbackContext context)
         {
             //noop
         }
-        public void OnInteract(InputAction.CallbackContext context)
-        {
-            //noop
-        }
+        
         public void OnCrouch(InputAction.CallbackContext context)
         {
             //noop

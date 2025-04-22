@@ -197,7 +197,7 @@ ConstantForce:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 320319955944314308}
   m_Enabled: 1
-  m_Force: {x: 0, y: 150, z: 0}
+  m_Force: {x: 0, y: 180, z: 0}
   m_RelativeForce: {x: 0, y: 0, z: 0}
   m_Torque: {x: 0, y: 0, z: 0}
   m_RelativeTorque: {x: 0, y: 0, z: 0}
@@ -2062,16 +2062,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   input: {fileID: 11400000, guid: b83f9e64460a41a4b840e3f2ca17d620, type: 2}
-  head: {fileID: 320319955944314308}
+  headConstantForce: {fileID: 1122829043977223720}
   legForce: 8
   legCooldownTime: 0.25
   rightFoot: {fileID: 3153261456794223112}
   leftFoot: {fileID: 4491411288417583595}
+  rightFootConstantForce: {fileID: 1388869786325543372}
+  leftFootConstantForce: {fileID: 1981386330918772585}
   armAttackForce: 6
   rightArm: {fileID: 1793642734227925781}
   leftArm: {fileID: 6070342185564113731}
   bodyTorque: {x: 0, y: 8, z: 0}
-  movementDirectionForce: {x: 0, y: 0.4, z: 1}
+  movementDirectionForce: {x: 0, y: 0.4, z: 1.2}
   body: {fileID: 8707582497562343192}
 --- !u!1 &6832938791706704615
 GameObject:

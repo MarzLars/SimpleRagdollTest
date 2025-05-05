@@ -98,8 +98,8 @@ namespace InputHandling
                     ""type"": ""Value"",
                     ""id"": ""351f2ccd-1f9f-44bf-9bec-d62ac5c5f408"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": ""Tap"",
+                    ""processors"": ""NormalizeVector2"",
+                    ""interactions"": """",
                     ""initialStateCheck"": true
                 },
                 {
